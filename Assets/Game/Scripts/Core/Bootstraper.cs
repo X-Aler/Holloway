@@ -1,15 +1,20 @@
+using Assets.Game.Scripts.Models;
+using Assets.Game.Scripts.Systems.Managers;
 using Assets.Game.Scripts.UI;
 using System;
 using UnityEngine;
 
 public class Bootstraper : MonoBehaviour
 {
-    [SerializeField] private PlayerMovement movement;
+    [SerializeField] private Player player;
     [SerializeField] private ManualController manualController;
     [SerializeField] private GameTimeManager gameTimeManager;
     [SerializeField] private GameTimeUIHandler gameTimeUIHandler;
     [SerializeField] private InteractableManager interactableManager;
     [SerializeField] private InteractableUIHandler interactableUIHandler;
+    [SerializeField] private ClientsManager clientsManager;
+    [SerializeField] private NPCSpawner npcSpawner;
+    [SerializeField] private PointStorage pointStorage;
 
     private PlayerControls controls;
     private void Awake()
@@ -18,7 +23,7 @@ public class Bootstraper : MonoBehaviour
 
         controls = new PlayerControls();
 
-        movement.Initialize(controls);
+        player.Initialize(controls);
         manualController.Initialize(controls);
 
         gameTimeManager.Initialzie();
@@ -26,6 +31,9 @@ public class Bootstraper : MonoBehaviour
 
         interactableManager.Initialize(controls);
         interactableUIHandler.Initialize(interactableManager, controls);
+
+        clientsManager.Initialize(pointStorage);
+        npcSpawner.Initialize(gameTimeManager, clientsManager, pointStorage);
 
         gameTimeManager.StartShift();
     }

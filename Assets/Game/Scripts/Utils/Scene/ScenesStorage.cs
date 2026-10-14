@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Assets.Game.Scripts.Helpers
+namespace Assets.Game.Scripts.Utils.Scene
 {
     public enum Scenes
     {

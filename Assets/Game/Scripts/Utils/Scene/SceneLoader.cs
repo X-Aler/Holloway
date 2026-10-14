@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-namespace Assets.Game.Scripts.Helpers
+namespace Assets.Game.Scripts.Utils.Scene
 {
     public class SceneLoader : MonoBehaviour
     {

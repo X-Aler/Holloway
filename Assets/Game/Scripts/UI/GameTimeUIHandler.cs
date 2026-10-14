@@ -1,3 +1,4 @@
+using Assets.Game.Scripts.Models;
 using TMPro;
 using UnityEngine;
 
@@ -9,10 +10,10 @@ public class GameTimeUIHandler : MonoBehaviour
         manager.OnTimePast += UpdateTimeUI;
     }
 
-    private void UpdateTimeUI(int currentHours, int currentMinutes)
+    private void UpdateTimeUI(GameTime currentTime)
     {
-        var timeAbbreviation = currentHours >= 12 ? "PM" : "AM";
+        var timeAbbreviation = currentTime.Hours >= 12 ? "PM" : "AM";
 
-        timeText.text = $"{currentHours}:{currentMinutes:D2} {timeAbbreviation}";
+        timeText.text = $"{currentTime.Hours}:{currentTime.Minutes:D2} {timeAbbreviation}";
     }
 }
