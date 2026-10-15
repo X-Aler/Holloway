@@ -3,6 +3,8 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cysharp.Threading.Tasks;
+using System.Threading;
 
 public class InteractableManager : MonoBehaviour
 {
@@ -11,7 +13,6 @@ public class InteractableManager : MonoBehaviour
     private Camera playerCamera;
     private PlayerControls playerControls;
     private IInteractable currentInteractable;
-    private Coroutine findInteractableCoroutine;
    
     public void Initialize(PlayerControls controls)
     {
@@ -19,24 +20,23 @@ public class InteractableManager : MonoBehaviour
 
         playerControls = controls;
 
-        findInteractableCoroutine = StartCoroutine(FindInteractable());
-
         playerControls.Player.Interact.performed += Interact;
+
+        FindInteractable(this.GetCancellationTokenOnDestroy()).Forget();
     }
 
     private void OnDestroy()
     {
         if (playerControls != null)
             playerControls.Player.Interact.performed -= Interact;
-
-        if (findInteractableCoroutine != null)
-            StopCoroutine(findInteractableCoroutine);
     }
 
-    private IEnumerator FindInteractable()
+    private async UniTask FindInteractable(CancellationToken token)
     {
         while (true)
         {
+            if (token.IsCancellationRequested) return;
+
             IInteractable foundInteractable = null;
             Transform foundTransform = null;
 
@@ -58,7 +58,7 @@ public class InteractableManager : MonoBehaviour
                 OnInteractableChanged?.Invoke(foundTransform);
             }
 
-            yield return null;
+            await UniTask.NextFrame(token);
         }
     }
 

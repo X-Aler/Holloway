@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Text;
+using System.Threading;
+using Unity.VectorGraphics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -10,7 +13,6 @@ namespace Assets.Game.Scripts.Utils.Scene
     public class SceneLoader : MonoBehaviour
     {
         public static SceneLoader Instance { get; private set; }
-        private Coroutine loadCoroutine;
         private Scenes currentScene;
         public Scenes CurrentScene => currentScene;
 
@@ -27,28 +29,22 @@ namespace Assets.Game.Scripts.Utils.Scene
             DontDestroyOnLoad(gameObject);
         }
 
-        public void LoadScene(Scenes scene)
+        public void LoadScene(Scenes scene) => LoadSceneAsync(scene, this.GetCancellationTokenOnDestroy()).Forget();
+
+        private async UniTask LoadSceneAsync(Scenes scene, CancellationToken token)
         {
-            if (loadCoroutine != null) return;
+            if (currentScene != Scenes.LoadScene)
+            {
+                currentScene = Scenes.LoadScene;
+                var loadSceneName = ScenesStorage.GetScene(currentScene);
+                await SceneManager.LoadSceneAsync(loadSceneName).WithCancellation(token);
+            }
 
             currentScene = scene;
 
-            if (currentScene != Scenes.LoadScene)
-                LoadScene(Scenes.LoadScene);
+            var sceneName = ScenesStorage.GetScene(currentScene);
 
-            var sceneName = ScenesStorage.GetScene(scene);
-
-            loadCoroutine = StartCoroutine(LoadCoroutineAsync(sceneName));
-        }
-
-        private IEnumerator LoadCoroutineAsync(string sceneName)
-        {
-            AsyncOperation loadOperation = SceneManager.LoadSceneAsync(sceneName);
-
-            while (!loadOperation.isDone)
-            {
-                yield return null;
-            }
+            await SceneManager.LoadSceneAsync(sceneName).WithCancellation(token);
         }
     }
 }
