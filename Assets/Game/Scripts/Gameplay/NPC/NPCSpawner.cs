@@ -1,7 +1,5 @@
+using Assets.Game.Scripts.Gameplay.NPC;
 using Assets.Game.Scripts.Models;
-using Assets.Game.Scripts.Systems.Controllers;
-using Assets.Game.Scripts.Systems.Managers;
-using Assets.Game.Scripts.UI.MenuButtons;
 using UnityEngine;
 
 public class NPCSpawner : MonoBehaviour
@@ -12,7 +10,6 @@ public class NPCSpawner : MonoBehaviour
     [SerializeField] private GameTime minSpawnInterval;
 
     private GameTimeManager gameTimeManger;
-    private ClientsManager clientsManager;
 
     private Transform npcSpawnPos;
 
@@ -20,10 +17,9 @@ public class NPCSpawner : MonoBehaviour
     private GameTime lastTime;
     private GameTime timeNeedToSpawn;
 
-    public void Initialize(GameTimeManager gameTimeManger, ClientsManager clientsManager, PointStorage points)
+    public void Initialize(GameTimeManager gameTimeManger, PointStorage points)
     {
         this.gameTimeManger = gameTimeManger;
-        this.clientsManager = clientsManager;
 
         npcSpawnPos = points.enterPoint;
 
@@ -51,15 +47,12 @@ public class NPCSpawner : MonoBehaviour
 
     private void SpawnNPC()
     {
-        var npc = Instantiate(npcPrefab, npcSpawnPos.position, Quaternion.identity);
+        var npcObj = Instantiate(npcPrefab, npcSpawnPos.position, Quaternion.identity);
 
-        var client = npc.GetComponent<Client>();
-        var clientMovement = npc.GetComponent<MovementController>();
+        var npc = npcObj.GetComponent<NPC>();
+        var clientMovement = npc.MovementController;
+
         clientMovement.SetSpeed(clientMovement.Speed * gameTimeManger.TimeMultipler);
-
-        client.Initialize(phonePrefab);
-
-        clientsManager.AddClient(client);
     }
 
     private GameTime GenerateTime()

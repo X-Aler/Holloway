@@ -9,17 +9,67 @@ namespace Assets.Game.Scripts.Systems.Controllers
     public class MovementController : MonoBehaviour
     {
         [SerializeField] private float speed = 5f;
-        private CharacterController controller;
+        [SerializeField] private float distanceOffset = 0.1f;
+        private CharacterController characterController;
+        private GravityController gravityController;
         public float Speed => speed;
+        public bool IsMoving { get; private set; }
+        public event Action OnReached;
 
-        public void Move(Vector3 direction)
+        public void Initialize()
         {
-            if (controller == null)
-                controller = GetComponent<CharacterController>();
+            characterController = GetComponent<CharacterController>();
 
-            direction.Normalize();
+            if (TryGetComponent<GravityController>(out var gController))
 
-            controller.Move(direction * speed * Time.deltaTime);
+            gravityController = gController;
+
+            gravityController.Initialize(characterController);
+        }
+
+        public void MoveTo(Vector3 point)
+        {
+            var direction = (point - transform.position);
+
+            Move(direction);
+        }
+
+        public void Move(Vector3 direction) => ApplyMove(direction);
+
+        private void ApplyMove(Vector3 move)
+        {
+            if (!HasReachedDestination(move)) return;
+                
+            var vecticalMove = Vector3.zero;
+
+            if (gravityController != null)
+                vecticalMove.y = gravityController.Velocity;
+
+            var horizontalMove = Vector3.zero;
+
+            move.y = 0;
+
+            if (move != Vector3.zero)
+            {
+                horizontalMove = move.normalized * speed;
+            }
+
+            var finalMove = horizontalMove + vecticalMove;
+
+            characterController.Move(finalMove * Time.deltaTime);
+        }
+
+        private bool HasReachedDestination(Vector3 move)
+        {
+            IsMoving = true;
+
+            if (move.sqrMagnitude < distanceOffset * distanceOffset)
+            {
+                IsMoving = false;
+                OnReached?.Invoke();
+            }
+
+            return IsMoving;
         }
 
         public void SetSpeed(float newSpeed) => speed = newSpeed;

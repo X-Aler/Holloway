@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
 
         movementController = GetComponent<MovementController>();
 
+        movementController.Initialize();
+
         cameraTransform = Camera.main.transform;
 
         initialized = true;

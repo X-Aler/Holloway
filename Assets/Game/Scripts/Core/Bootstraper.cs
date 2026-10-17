@@ -1,5 +1,4 @@
 using Assets.Game.Scripts.Models;
-using Assets.Game.Scripts.Systems.Managers;
 using Assets.Game.Scripts.UI;
 using System;
 using UnityEngine;
@@ -12,7 +11,6 @@ public class Bootstraper : MonoBehaviour
     [SerializeField] private GameTimeUIHandler gameTimeUIHandler;
     [SerializeField] private InteractableManager interactableManager;
     [SerializeField] private InteractableUIHandler interactableUIHandler;
-    [SerializeField] private ClientsManager clientsManager;
     [SerializeField] private NPCSpawner npcSpawner;
     [SerializeField] private PointStorage pointStorage;
 
@@ -32,8 +30,7 @@ public class Bootstraper : MonoBehaviour
         interactableManager.Initialize(controls);
         interactableUIHandler.Initialize(interactableManager, controls);
 
-        clientsManager.Initialize(pointStorage);
-        npcSpawner.Initialize(gameTimeManager, clientsManager, pointStorage);
+        npcSpawner.Initialize(gameTimeManager, pointStorage);
 
         gameTimeManager.StartShift();
     }

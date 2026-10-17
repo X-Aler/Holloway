@@ -5,33 +5,34 @@ using UnityEngine;
 
 namespace Assets.Game.Scripts.Systems.Controllers
 {
-    [RequireComponent(typeof(CharacterController))]
     public class GravityController : MonoBehaviour
     {
         [SerializeField] private float gravity = -9.81f;
-        private CharacterController characterController;
         private float velocity;
+        public float Velocity => velocity;
+        private bool initialized = false;
+        private CharacterController characterController;
 
-        private void Awake()
+        public void Initialize(CharacterController controller)
         {
-            characterController = GetComponent<CharacterController>();
+            characterController = controller;
+
+            initialized = true;
         }
 
         private void Update()
         {
+            if (!initialized) return;
+
             ApplyGravity();
         }
 
         private void ApplyGravity()
         {
-            if (characterController.isGrounded && velocity > 0)
-                velocity = -1f;
+            if (characterController.isGrounded && velocity < 0)
+                velocity = -2f;
             else
                 velocity += gravity * Time.deltaTime;
-
-            var move = new Vector3(0, velocity, 0);
-
-            characterController.Move(move * Time.deltaTime);
         }
     }
 }
