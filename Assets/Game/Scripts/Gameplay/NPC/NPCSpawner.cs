@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class NPCSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject phonePrefab;
     [SerializeField] private GameObject npcPrefab;
     [SerializeField] private GameTime maxSpawnInterval;
     [SerializeField] private GameTime minSpawnInterval;
 
     private GameTimeManager gameTimeManger;
-
-    private Transform npcSpawnPos;
+    private PointStorage pointStorage;
 
     private GameTime timeToNextClient;
     private GameTime lastTime;
@@ -21,7 +19,7 @@ public class NPCSpawner : MonoBehaviour
     {
         this.gameTimeManger = gameTimeManger;
 
-        npcSpawnPos = points.enterPoint;
+        pointStorage = points;
 
         lastTime = gameTimeManger.CurrentTime;
 
@@ -47,12 +45,14 @@ public class NPCSpawner : MonoBehaviour
 
     private void SpawnNPC()
     {
-        var npcObj = Instantiate(npcPrefab, npcSpawnPos.position, Quaternion.identity);
+        var npcObj = Instantiate(npcPrefab, pointStorage.npcSpawnPoint.position, Quaternion.identity);
 
         var npc = npcObj.GetComponent<NPC>();
-        var clientMovement = npc.MovementController;
 
-        clientMovement.SetSpeed(clientMovement.Speed * gameTimeManger.TimeMultipler);
+        npc.Initialize(pointStorage);
+
+        var npcMovement = npc.MovementController;
+        npcMovement.SetSpeed(npcMovement.Speed * gameTimeManger.TimeMultipler);
     }
 
     private GameTime GenerateTime()

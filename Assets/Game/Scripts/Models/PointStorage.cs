@@ -7,6 +7,7 @@ namespace Assets.Game.Scripts.Models
 {
     public class PointStorage : MonoBehaviour
     {
+        public Transform npcSpawnPoint;
         public Transform enterPoint;
         public Transform pickupPoint;
         public Transform[] fittingRoomPoints;

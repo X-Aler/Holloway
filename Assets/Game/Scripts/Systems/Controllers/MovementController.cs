@@ -38,21 +38,21 @@ namespace Assets.Game.Scripts.Systems.Controllers
 
         private void ApplyMove(Vector3 move)
         {
-            if (!HasReachedDestination(move)) return;
-                
-            var vecticalMove = Vector3.zero;
-
-            if (gravityController != null)
-                vecticalMove.y = gravityController.Velocity;
-
             var horizontalMove = Vector3.zero;
 
             move.y = 0;
 
-            if (move != Vector3.zero)
+            IsMoving = !HasReachedDestination(move);
+
+            if (IsMoving)
             {
                 horizontalMove = move.normalized * speed;
             }
+
+            var vecticalMove = Vector3.zero;
+
+            if (gravityController != null)
+                vecticalMove.y = gravityController.Velocity;
 
             var finalMove = horizontalMove + vecticalMove;
 
@@ -61,15 +61,17 @@ namespace Assets.Game.Scripts.Systems.Controllers
 
         private bool HasReachedDestination(Vector3 move)
         {
-            IsMoving = true;
+            if (move == Vector3.zero) return true;
+
+            var isReached = false;
 
             if (move.sqrMagnitude < distanceOffset * distanceOffset)
             {
-                IsMoving = false;
+                isReached = true;
                 OnReached?.Invoke();
             }
 
-            return IsMoving;
+            return isReached;
         }
 
         public void SetSpeed(float newSpeed) => speed = newSpeed;

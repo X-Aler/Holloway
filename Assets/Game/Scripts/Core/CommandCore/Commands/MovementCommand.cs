@@ -13,6 +13,7 @@ namespace Assets.Game.Scripts.Core.CommandCore.Commands
         
         public MovementCommand(NPC npc, Vector3 movePosition)
         {
+            this.npc = npc;
             this.movePosition = movePosition;
         }
 
@@ -24,6 +25,8 @@ namespace Assets.Game.Scripts.Core.CommandCore.Commands
         public void Update()
         {
             npc.MovementController.MoveTo(movePosition);
+
+            IsCompleted = !npc.MovementController.IsMoving;
         }
     }
 }

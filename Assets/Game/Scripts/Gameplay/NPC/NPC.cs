@@ -1,4 +1,7 @@
-﻿using Assets.Game.Scripts.Core.FSM;
+﻿using Assets.Game.Scripts.Core.CommandCore;
+using Assets.Game.Scripts.Core.FSM;
+using Assets.Game.Scripts.Core.FSM.States;
+using Assets.Game.Scripts.Models;
 using Assets.Game.Scripts.Systems.Controllers;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -13,32 +16,35 @@ namespace Assets.Game.Scripts.Gameplay.NPC
         private StateMachine stateMachine;
         public Transform HandPosition => handPosition;
         public MovementController MovementController { get; private set; }
-        private List<IState> states;
-        private int stateIndex = 0;
+        public CommandsRunner CommandsRunner { get; private set; }
+        public AliveState AliveState { get; private set;  }
+        public DeadState DeadState { get; private set;  }
 
-        public void Initialize(List<IState> states)
+        private bool initialized = false;
+
+        public void Initialize(PointStorage pointStorage)
         {
             MovementController = GetComponent<MovementController>();
 
             MovementController.Initialize();
 
+            CommandsRunner = new CommandsRunner();
+
             stateMachine = new StateMachine();
 
-            this.states = states;
+            AliveState = new AliveState(this, pointStorage, stateMachine);
+            DeadState = new DeadState();
 
-            stateMachine.Initialize(states[stateIndex]);
+            stateMachine.Initialize(AliveState);
+
+            initialized = true;
         }
 
         public void Update()
         {
+            if (!initialized) return;
+
             stateMachine.CurrentState.Update();
-        }
-
-        public void GetToNextState()
-        {
-            stateIndex++;
-
-            stateMachine.ChangeState(states[stateIndex]);
         }
     }
 }

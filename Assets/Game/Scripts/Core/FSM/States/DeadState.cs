@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Assets.Game.Scripts.Core.FSM.States
 {
-    internal class DeadState : IState
+    public class DeadState : IState
     {
         public void Enter()
         {
