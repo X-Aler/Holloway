@@ -19,14 +19,19 @@ namespace Assets.Game.Scripts.Core.CommandCore.Commands
 
         public void Start()
         {
-            
+            npc.MovementController.OnReached += OnCompleted;
         }
 
         public void Update()
         {
             npc.MovementController.MoveTo(movePosition);
-
-            IsCompleted = !npc.MovementController.IsMoving;
         }
+
+        private void OnCompleted()
+        {
+            IsCompleted = true;
+
+            npc.MovementController.OnReached -= OnCompleted;
+        } 
     }
 }

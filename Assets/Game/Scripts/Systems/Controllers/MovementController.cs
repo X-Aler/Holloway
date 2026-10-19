@@ -8,11 +8,12 @@ namespace Assets.Game.Scripts.Systems.Controllers
     [RequireComponent(typeof(CharacterController))]
     public class MovementController : MonoBehaviour
     {
-        [SerializeField] private float speed = 5f;
+        [SerializeField] private float movementSpeed = 5f;
+        [SerializeField] private float rotationSpeed = 5f;
         [SerializeField] private float distanceOffset = 0.1f;
         private CharacterController characterController;
         private GravityController gravityController;
-        public float Speed => speed;
+        public float MovementSpeed => movementSpeed;
         public bool IsMoving { get; private set; }
         public event Action OnReached;
 
@@ -46,7 +47,10 @@ namespace Assets.Game.Scripts.Systems.Controllers
 
             if (IsMoving)
             {
-                horizontalMove = move.normalized * speed;
+                horizontalMove = move.normalized * movementSpeed;
+
+                var targetRotation = Quaternion.LookRotation(horizontalMove);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             }
 
             var vecticalMove = Vector3.zero;
@@ -74,6 +78,6 @@ namespace Assets.Game.Scripts.Systems.Controllers
             return isReached;
         }
 
-        public void SetSpeed(float newSpeed) => speed = newSpeed;
+        public void SetSpeed(float newSpeed) => movementSpeed = newSpeed;
     }
 }

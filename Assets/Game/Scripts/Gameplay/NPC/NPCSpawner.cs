@@ -52,7 +52,7 @@ public class NPCSpawner : MonoBehaviour
         npc.Initialize(pointStorage);
 
         var npcMovement = npc.MovementController;
-        npcMovement.SetSpeed(npcMovement.Speed * gameTimeManger.TimeMultipler);
+        npcMovement.SetSpeed(npcMovement.MovementSpeed * gameTimeManger.TimeMultipler);
     }
 
     private GameTime GenerateTime()
