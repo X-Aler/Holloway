@@ -1,12 +1,10 @@
 ﻿using Assets.Game.Scripts.Gameplay.NPC;
 using UnityEngine;
 
-namespace Assets.Game.Scripts.Core.CommandCore.Commands
+namespace Assets.Game.Scripts.Core.CommandCore.BasicCommands
 {
-    public class MovementCommand : ICommand
+    public class MovementCommand : BaseCommand
     {
-        public bool IsCompleted { get; set; }
-
         private Vector3 movePosition;
 
         private NPC npc;
@@ -17,21 +15,22 @@ namespace Assets.Game.Scripts.Core.CommandCore.Commands
             this.movePosition = movePosition;
         }
 
-        public void Start()
+        public override void Start()
         {
-            npc.MovementController.OnReached += OnCompleted;
+            npc.MovementController.OnArrived += Complete;
+
+            Debug.Log("StartMoving");
         }
 
-        public void Update()
+        public override void Update()
         {
             npc.MovementController.MoveTo(movePosition);
         }
 
-        private void OnCompleted()
+        protected override void OnComplete()
         {
-            IsCompleted = true;
-
-            npc.MovementController.OnReached -= OnCompleted;
+            Debug.Log("Reached");
+            npc.MovementController.OnArrived -= Complete;
         } 
     }
 }

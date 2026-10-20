@@ -14,6 +14,6 @@ public class GameTimeUIHandler : MonoBehaviour
     {
         var timeAbbreviation = currentTime.Hours >= 12 ? "PM" : "AM";
 
-        timeText.text = $"{currentTime.Hours}:{currentTime.Minutes:D2} {timeAbbreviation}";
+        timeText.text = $"{currentTime.Hours:D2}:{currentTime.Minutes:D2} {timeAbbreviation}";
     }
 }

@@ -15,42 +15,50 @@ namespace Assets.Game.Scripts.Systems.Controllers
         private GravityController gravityController;
         public float MovementSpeed => movementSpeed;
         public bool IsMoving { get; private set; }
-        public event Action OnReached;
+        public event Action OnRotated;
+        public event Action OnArrived;
 
         public void Initialize()
         {
             characterController = GetComponent<CharacterController>();
 
             if (TryGetComponent<GravityController>(out var gController))
+            {
+                gravityController = gController;
 
-            gravityController = gController;
-
-            gravityController.Initialize(characterController);
+                gravityController.Initialize(characterController);
+            }
         }
 
         public void MoveTo(Vector3 point)
         {
             var direction = (point - transform.position);
 
-            Move(direction);
+            direction.y = 0;
+
+            IsMoving = !HasReachedDestination(direction);
+
+            ApplyMove(direction);
         }
 
-        public void Move(Vector3 direction) => ApplyMove(direction);
+        public void Move(Vector3 direction)
+        {
+            direction.y = 0;
+
+            IsMoving = direction.sqrMagnitude > 0.01f;
+
+            ApplyMove(direction);
+        } 
 
         private void ApplyMove(Vector3 move)
         {
             var horizontalMove = Vector3.zero;
 
-            move.y = 0;
-
-            IsMoving = !HasReachedDestination(move);
-
             if (IsMoving)
             {
                 horizontalMove = move.normalized * movementSpeed;
 
-                var targetRotation = Quaternion.LookRotation(horizontalMove);
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+                RotateTowards(horizontalMove);
             }
 
             var vecticalMove = Vector3.zero;
@@ -65,19 +73,38 @@ namespace Assets.Game.Scripts.Systems.Controllers
 
         private bool HasReachedDestination(Vector3 move)
         {
-            if (move == Vector3.zero) return true;
-
-            var isReached = false;
-
             if (move.sqrMagnitude < distanceOffset * distanceOffset)
             {
-                isReached = true;
-                OnReached?.Invoke();
+                OnArrived?.Invoke();
+
+                return true;
             }
 
-            return isReached;
+            return false;
         }
 
         public void SetSpeed(float newSpeed) => movementSpeed = newSpeed;
+
+        public void RotateTowards(Vector3 direction)
+        {
+            direction.y = 0;
+
+            if (direction.sqrMagnitude < 0.01f)
+            {
+                OnRotated?.Invoke();
+
+                return;
+            }
+
+            var targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+            if (Quaternion.Angle(transform.rotation, targetRotation) < 1f)
+            {
+                transform.rotation = targetRotation;
+
+                OnRotated?.Invoke();
+            }
+        }
     }
 }

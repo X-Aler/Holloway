@@ -1,40 +1,57 @@
 using Assets.Game.Scripts.Gameplay.NPC;
 using Assets.Game.Scripts.Models;
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class NPCSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject npcPrefab;
+    [SerializeField] private int MAX_NPC_COUNT;
+    [SerializeField] private NPC npcPrefab;
     [SerializeField] private GameTime maxSpawnInterval;
     [SerializeField] private GameTime minSpawnInterval;
+
+    private Player player;
+
+    private List<NPC> npcList = new(); 
 
     private GameTimeManager gameTimeManger;
     private PointStorage pointStorage;
 
-    private GameTime timeToNextClient;
     private GameTime lastTime;
     private GameTime timeNeedToSpawn;
 
-    public void Initialize(GameTimeManager gameTimeManger, PointStorage points)
+    public void Initialize(GameTimeManager gameTimeManger, PointStorage points, Player player)
     {
         this.gameTimeManger = gameTimeManger;
 
+        this.gameTimeManger.OnShiftStart += OnShiftStart;
+        this.gameTimeManger.OnTimePast += Spawn;
+
+        this.player = player;
+
         pointStorage = points;
-
-        lastTime = gameTimeManger.CurrentTime;
-
-        gameTimeManger.OnTimePast += Spawn;
-
-        timeNeedToSpawn = GenerateTime();
     }
 
     private void OnDestroy()
     {
-        gameTimeManger.OnTimePast -= Spawn;
+        if (gameTimeManger != null)
+        {
+            gameTimeManger.OnTimePast -= Spawn;
+            gameTimeManger.OnShiftStart -= OnShiftStart;
+        }
+    }
+
+    private void OnShiftStart()
+    {
+        lastTime = gameTimeManger.CurrentTime;
+        timeNeedToSpawn = GenerateTime();
     }
 
     private void Spawn(GameTime currentTime)
     {
+        if (npcList.Count >= MAX_NPC_COUNT) return;
+
         if ((currentTime - lastTime) >= timeNeedToSpawn)
         {
             SpawnNPC();
@@ -47,11 +64,11 @@ public class NPCSpawner : MonoBehaviour
     {
         var npcObj = Instantiate(npcPrefab, pointStorage.npcSpawnPoint.position, Quaternion.identity);
 
-        var npc = npcObj.GetComponent<NPC>();
+        npcObj.Initialize(pointStorage, player);
 
-        npc.Initialize(pointStorage);
+        npcList.Add(npcObj);
 
-        var npcMovement = npc.MovementController;
+        var npcMovement = npcPrefab.MovementController;
         npcMovement.SetSpeed(npcMovement.MovementSpeed * gameTimeManger.TimeMultipler);
     }
 
@@ -60,7 +77,7 @@ public class NPCSpawner : MonoBehaviour
         if (minSpawnInterval > maxSpawnInterval) 
             (minSpawnInterval, maxSpawnInterval) = (maxSpawnInterval, minSpawnInterval);
 
-        var randomSeconds = Random.Range(minSpawnInterval.TotalSeconds, maxSpawnInterval.TotalSeconds);
+        var randomSeconds = Random.Range(minSpawnInterval.TotalSeconds, maxSpawnInterval.TotalSeconds + 1);
 
         return new GameTime(0, 0, randomSeconds);
     }

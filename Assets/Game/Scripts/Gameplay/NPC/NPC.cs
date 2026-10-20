@@ -9,6 +9,7 @@ using UnityEngine;
 
 namespace Assets.Game.Scripts.Gameplay.NPC
 {
+    [RequireComponent(typeof(MovementController))]
     public class NPC : MonoBehaviour
     {
         [SerializeField] private NPCData data;
@@ -22,7 +23,7 @@ namespace Assets.Game.Scripts.Gameplay.NPC
 
         private bool initialized = false;
 
-        public void Initialize(PointStorage pointStorage)
+        public void Initialize(PointStorage pointStorage, Player player)
         {
             MovementController = GetComponent<MovementController>();
 
@@ -32,7 +33,7 @@ namespace Assets.Game.Scripts.Gameplay.NPC
 
             stateMachine = new StateMachine();
 
-            AliveState = new AliveState(this, pointStorage, stateMachine);
+            AliveState = new AliveState(this, pointStorage, stateMachine, player);
             DeadState = new DeadState();
 
             stateMachine.Initialize(AliveState);

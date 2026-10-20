@@ -9,7 +9,7 @@ namespace Assets.Game.Scripts.Models
         public int Minutes;
         public int Seconds;
 
-        public int TotalSeconds => Hours * 3600 + Minutes * 60 + Seconds;
+        public readonly int TotalSeconds => (Hours * 3600 + Minutes * 60 + Seconds);
 
         public GameTime(int hours = 0, int minutes = 0, int seconds = 0)
         {

@@ -24,13 +24,13 @@ public class Bootstraper : MonoBehaviour
         player.Initialize(controls);
         manualController.Initialize(controls);
 
-        gameTimeManager.Initialzie();
-        gameTimeUIHandler.Initialzie(gameTimeManager);
-
         interactableManager.Initialize(controls);
         interactableUIHandler.Initialize(interactableManager, controls);
 
-        npcSpawner.Initialize(gameTimeManager, pointStorage);
+        gameTimeManager.Initialzie();
+        gameTimeUIHandler.Initialzie(gameTimeManager);
+
+        npcSpawner.Initialize(gameTimeManager, pointStorage, player);
 
         gameTimeManager.StartShift();
     }
