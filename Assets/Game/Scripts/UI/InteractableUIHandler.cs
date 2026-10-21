@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using VContainer;
 
 namespace Assets.Game.Scripts.UI
 {
@@ -13,7 +14,8 @@ namespace Assets.Game.Scripts.UI
         private PlayerControls playerControls;
         private GameObject ui;
 
-        public void Initialize(InteractableManager manager, PlayerControls controls)
+        [Inject]
+        public void Construct(InteractableManager manager, PlayerControls controls)
         {
             manager.OnInteractableChanged += CreateUI;
 

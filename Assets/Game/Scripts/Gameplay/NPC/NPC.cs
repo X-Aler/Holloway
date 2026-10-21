@@ -6,6 +6,7 @@ using Assets.Game.Scripts.Systems.Controllers;
 using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
+using VContainer;
 
 namespace Assets.Game.Scripts.Gameplay.NPC
 {
@@ -23,7 +24,7 @@ namespace Assets.Game.Scripts.Gameplay.NPC
 
         private bool initialized = false;
 
-        public void Initialize(PointStorage pointStorage, Player player)
+        public void Initialize()
         {
             MovementController = GetComponent<MovementController>();
 
@@ -33,7 +34,7 @@ namespace Assets.Game.Scripts.Gameplay.NPC
 
             stateMachine = new StateMachine();
 
-            AliveState = new AliveState(this, pointStorage, stateMachine, player);
+            AliveState = new AliveState(this, stateMachine);
             DeadState = new DeadState();
 
             stateMachine.Initialize(AliveState);

@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class GameTimeManager : MonoBehaviour
 {
-    public static GameTimeManager Instance { get; private set; }
     [SerializeField] private float timeMultipler = 1;
     [SerializeField] private GameTime shiftStart;
     [SerializeField] private GameTime shiftEnd;
@@ -29,8 +28,6 @@ public class GameTimeManager : MonoBehaviour
 
     public void Initialzie()
     {
-        Instance = this;
-
         var endSecondsTime = shiftEnd.TotalSeconds;
 
         var realTimeSeconds = shiftTimeInReal.TotalSeconds;

@@ -1,11 +1,14 @@
 using Assets.Game.Scripts.Models;
 using TMPro;
 using UnityEngine;
+using VContainer;
 
 public class GameTimeUIHandler : MonoBehaviour
 {
     [SerializeField] private TMP_Text timeText;
-    public void Initialzie(GameTimeManager manager)
+
+    [Inject]
+    public void Construct(GameTimeManager manager)
     {
         manager.OnTimePast += UpdateTimeUI;
     }

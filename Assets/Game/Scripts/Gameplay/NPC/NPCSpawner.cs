@@ -1,8 +1,8 @@
 using Assets.Game.Scripts.Gameplay.NPC;
 using Assets.Game.Scripts.Models;
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
+using VContainer;
 
 public class NPCSpawner : MonoBehaviour
 {
@@ -21,7 +21,8 @@ public class NPCSpawner : MonoBehaviour
     private GameTime lastTime;
     private GameTime timeNeedToSpawn;
 
-    public void Initialize(GameTimeManager gameTimeManger, PointStorage points, Player player)
+    [Inject]
+    public void Construct(GameTimeManager gameTimeManger, PointStorage points, Player player)
     {
         this.gameTimeManger = gameTimeManger;
 
@@ -64,11 +65,11 @@ public class NPCSpawner : MonoBehaviour
     {
         var npcObj = Instantiate(npcPrefab, pointStorage.npcSpawnPoint.position, Quaternion.identity);
 
-        npcObj.Initialize(pointStorage, player);
+        npcObj.Initialize();
 
         npcList.Add(npcObj);
 
-        var npcMovement = npcPrefab.MovementController;
+        var npcMovement = npcObj.MovementController;
         npcMovement.SetSpeed(npcMovement.MovementSpeed * gameTimeManger.TimeMultipler);
     }
 

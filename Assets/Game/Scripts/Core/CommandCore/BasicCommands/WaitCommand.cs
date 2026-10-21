@@ -6,21 +6,23 @@ namespace Assets.Game.Scripts.Core.CommandCore.BasicCommands
     {
         private float waitSeconds;
         private bool isControlWaiting;
-
         private GameTimeManager gameTimeManager;
 
-        public WaitCommand(GameTime waitTime)
+        public WaitCommand(GameTimeManager manager, GameTime waitTime)
         {
+            gameTimeManager = manager;
             waitSeconds = waitTime.TotalSeconds;
             isControlWaiting = false;
         }
 
-        public WaitCommand() { isControlWaiting = true; }
+        public WaitCommand(GameTimeManager manager) 
+        {
+            gameTimeManager = manager;
+            isControlWaiting = true; 
+        }
 
         public override void Start()
         {
-            gameTimeManager = GameTimeManager.Instance;
-
             if (!isControlWaiting && waitSeconds <= 0) Complete();
         }
 

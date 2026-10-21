@@ -1,6 +1,7 @@
 using Assets.Game.Scripts.Systems.Controllers;
 using Assets.Game.Scripts.Utils.Camera;
 using UnityEngine;
+using VContainer;
 
 public class Player : MonoBehaviour
 {
@@ -9,7 +10,8 @@ public class Player : MonoBehaviour
     private Transform cameraTransform;
     private bool initialized = false;
 
-    public void Initialize(PlayerControls controls)
+    [Inject]
+    public void Construct(PlayerControls controls)
     {
         playerControls = controls;
 

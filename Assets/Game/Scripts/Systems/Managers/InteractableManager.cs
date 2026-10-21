@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Cysharp.Threading.Tasks;
 using System.Threading;
+using VContainer;
 
 public class InteractableManager : MonoBehaviour
 {
@@ -13,8 +14,9 @@ public class InteractableManager : MonoBehaviour
     private Camera playerCamera;
     private PlayerControls playerControls;
     private IInteractable currentInteractable;
-   
-    public void Initialize(PlayerControls controls)
+
+    [Inject]
+    public void Construct(PlayerControls controls)
     {
         playerCamera = Camera.main;
 

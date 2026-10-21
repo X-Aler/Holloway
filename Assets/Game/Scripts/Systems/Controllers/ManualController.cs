@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using VContainer;
 
 public class ManualController : MonoBehaviour
 {
@@ -13,7 +14,8 @@ public class ManualController : MonoBehaviour
         Manual.SetActive(isOpen);
     }
 
-    public void Initialize(PlayerControls controls)
+    [Inject]
+    public void Construct(PlayerControls controls)
     {
         playerControls = controls;
 
