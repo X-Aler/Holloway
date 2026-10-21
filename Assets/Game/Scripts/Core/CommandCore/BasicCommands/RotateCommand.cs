@@ -9,8 +9,9 @@ namespace Assets.Game.Scripts.Core.CommandCore.BasicCommands
     {
         private NPC npc;
         private Vector3 rotateDirection;
-        private bool isRelativeRotation;
-        private float rotationAngle;
+        private readonly bool isRelativeRotation;
+        private readonly float rotationAngle;
+        private readonly Transform targetPoint;
 
         public RotateCommand(NPC npc, Vector3 rotateDirection)
         {
@@ -29,7 +30,7 @@ namespace Assets.Game.Scripts.Core.CommandCore.BasicCommands
         {
             this.npc = npc;
 
-            this.rotateDirection = (point.position - npc.transform.position);
+            this.targetPoint = point;
         }
 
         public override void Start()
@@ -44,6 +45,11 @@ namespace Assets.Game.Scripts.Core.CommandCore.BasicCommands
 
         public override void Update()
         {
+            if (targetPoint != null)
+            {
+                rotateDirection = targetPoint.position - npc.transform.position;
+            }
+
             npc.MovementController.RotateTowards(rotateDirection);
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoGroupGenerator;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,8 +9,11 @@ namespace Assets.Game.Scripts.Core.CommandCore
     {
         private readonly List<ICommand> commands = new List<ICommand>();
         private ICommand currentCommand;
-        public bool IsRunning => currentCommand != null;
+        public bool IsRunning => currentCommand != null && commands.Count == 0;
         public bool IsCompleted => !IsRunning;
+
+        public CommandsRunner(IEnumerable<ICommand> commands) => this.commands.AddRange(commands);
+        public CommandsRunner() { }
 
         public void AddCommand(ICommand command) => commands.Add(command);
 

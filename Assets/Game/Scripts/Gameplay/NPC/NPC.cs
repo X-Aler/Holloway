@@ -3,8 +3,8 @@ using Assets.Game.Scripts.Core.FSM;
 using Assets.Game.Scripts.Core.FSM.States;
 using Assets.Game.Scripts.Models;
 using Assets.Game.Scripts.Systems.Controllers;
-using NUnit.Framework;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using VContainer;
 
@@ -18,19 +18,29 @@ namespace Assets.Game.Scripts.Gameplay.NPC
         private StateMachine stateMachine;
         public Transform HandPosition => handPosition;
         public MovementController MovementController { get; private set; }
+        public PointStorage PointStorage { get; private set; }
+        public GameTimeManager GameTimeManager { get; private set; }
         public CommandsRunner CommandsRunner { get; private set; }
         public AliveState AliveState { get; private set;  }
         public DeadState DeadState { get; private set;  }
 
         private bool initialized = false;
 
-        public void Initialize()
+        public void Initialize(PointStorage pointStorage, GameTimeManager manager)
         {
             MovementController = GetComponent<MovementController>();
 
             MovementController.Initialize();
 
-            CommandsRunner = new CommandsRunner();
+            PointStorage = pointStorage;
+
+            GameTimeManager = manager;
+
+            MovementController.SetSpeed(MovementController.MovementSpeed * GameTimeManager.TimeMultipler);
+
+            var commands = data.CommandsPool.Select(c => c.GetCommand(this));
+
+            CommandsRunner = new CommandsRunner(commands);
 
             stateMachine = new StateMachine();
 

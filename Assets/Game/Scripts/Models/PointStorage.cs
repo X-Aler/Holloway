@@ -1,15 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Game.Scripts.Models
 {
+    public enum PointType
+    {
+        NpcSpawn,
+        Enter,
+        Pickup,
+        FittingRoom,
+        Player
+    }
+
     public class PointStorage : MonoBehaviour
     {
-        public Transform npcSpawnPoint;
-        public Transform enterPoint;
-        public Transform pickupPoint;
-        public Transform[] fittingRoomPoints;
+        [SerializeField] private Transform npcSpawnPoint;
+        [SerializeField] private Transform enterPoint;
+        [SerializeField] private Transform pickupPoint;
+        [SerializeField] private Transform playerPoint;
+        [SerializeField] private Transform[] fittingRoomPoints;
+
+        public Transform GetPoint(PointType type)
+        {
+            return type switch
+            {
+                PointType.NpcSpawn => npcSpawnPoint,
+                PointType.Enter => enterPoint,
+                PointType.Pickup => pickupPoint,
+                PointType.Player => playerPoint,
+                PointType.FittingRoom => GetRandomFittingRoom(),
+                _ => null
+            };
+        }
+
+        private Transform GetRandomFittingRoom()
+        {
+            if (fittingRoomPoints == null || fittingRoomPoints.Length == 0)
+                return null;
+
+            return fittingRoomPoints[Random.Range(0, fittingRoomPoints.Length)];
+        }
     }
 }

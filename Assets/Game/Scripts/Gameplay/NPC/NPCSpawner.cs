@@ -63,14 +63,12 @@ public class NPCSpawner : MonoBehaviour
 
     private void SpawnNPC()
     {
-        var npcObj = Instantiate(npcPrefab, pointStorage.npcSpawnPoint.position, Quaternion.identity);
+        var spawnPoint = pointStorage.GetPoint(PointType.NpcSpawn);
+        var npcObj = Instantiate(npcPrefab, spawnPoint.position, Quaternion.identity);
 
-        npcObj.Initialize();
+        npcObj.Initialize(pointStorage, gameTimeManger);
 
         npcList.Add(npcObj);
-
-        var npcMovement = npcObj.MovementController;
-        npcMovement.SetSpeed(npcMovement.MovementSpeed * gameTimeManger.TimeMultipler);
     }
 
     private GameTime GenerateTime()
