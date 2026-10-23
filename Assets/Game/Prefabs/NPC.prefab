@@ -413,6 +413,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Game.Scripts.Gameplay.NPC.NPC
   data: {fileID: 11400000, guid: 4cbafaaa0ef74b7489f15244dc7b8e0f, type: 2}
   handPosition: {fileID: 8870800423678138528}
+  sound: {fileID: 8300000, guid: d610e7ff66fd75b4aa400167e4e4a3a1, type: 3}
 --- !u!1 &8123233294731663672
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 ﻿using Assets.Game.Scripts.Gameplay.NPC;
 using UnityEngine;
+using Assets.Game.Scripts.Utils;
 
 namespace Assets.Game.Scripts.Core.CommandCore.BasicCommands
 {
@@ -19,7 +20,6 @@ namespace Assets.Game.Scripts.Core.CommandCore.BasicCommands
         {
             npc.MovementController.OnArrived += Complete;
 
-            Debug.Log("StartMoving");
         }
 
         public override void Update()
@@ -29,7 +29,6 @@ namespace Assets.Game.Scripts.Core.CommandCore.BasicCommands
 
         protected override void OnComplete()
         {
-            Debug.Log("Reached");
             npc.MovementController.OnArrived -= Complete;
         } 
     }

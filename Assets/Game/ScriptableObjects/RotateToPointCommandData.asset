@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: RotateToPointCommandData
   m_EditorClassIdentifier: Assembly-CSharp::RotateToPointCommandData
   CommandType: 0
-  point: 0
+  point: 4

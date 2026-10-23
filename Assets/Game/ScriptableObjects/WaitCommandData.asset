@@ -15,5 +15,5 @@ MonoBehaviour:
   CommandType: 0
   waitTime:
     Hours: 0
-    Minutes: 0
+    Minutes: 10
     Seconds: 0

@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: MoveToPickup
+  m_Script: {fileID: 11500000, guid: e8a51fec9559b3e47b43552abd525ac8, type: 3}
+  m_Name: MovementCommandData
   m_EditorClassIdentifier: Assembly-CSharp::MovementCommandData
   CommandType: 0
-  point: 0
+  point: 1
