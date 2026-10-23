@@ -5,7 +5,7 @@ using VContainer;
 
 public class Player : MonoBehaviour
 {
-    private MovementController movementController;
+    private PlayerMovementController movementController;
     private PlayerControls playerControls;
     private Transform cameraTransform;
     private bool initialized = false;
@@ -15,7 +15,7 @@ public class Player : MonoBehaviour
     {
         playerControls = controls;
 
-        movementController = GetComponent<MovementController>();
+        movementController = GetComponent<PlayerMovementController>();
 
         movementController.Initialize();
 

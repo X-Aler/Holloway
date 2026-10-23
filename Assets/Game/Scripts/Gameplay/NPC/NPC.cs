@@ -10,14 +10,14 @@ using VContainer;
 
 namespace Assets.Game.Scripts.Gameplay.NPC
 {
-    [RequireComponent(typeof(MovementController))]
+    [RequireComponent(typeof(NPCMovementController))]
     public class NPC : MonoBehaviour
     {
         [SerializeField] private NPCData data;
         [SerializeField] private Transform handPosition;
         private StateMachine stateMachine;
         public Transform HandPosition => handPosition;
-        public MovementController MovementController { get; private set; }
+        public NPCMovementController MovementController { get; private set; }
         public PointStorage PointStorage { get; private set; }
         public GameTimeManager GameTimeManager { get; private set; }
         public CommandsRunner CommandsRunner { get; private set; }
@@ -28,15 +28,13 @@ namespace Assets.Game.Scripts.Gameplay.NPC
 
         public void Initialize(PointStorage pointStorage, GameTimeManager manager)
         {
-            MovementController = GetComponent<MovementController>();
+            MovementController = GetComponent<NPCMovementController>();
 
             MovementController.Initialize();
 
             PointStorage = pointStorage;
 
             GameTimeManager = manager;
-
-            MovementController.SetSpeed(MovementController.MovementSpeed * GameTimeManager.TimeMultipler);
 
             var commands = data.CommandsPool.Select(c => c.GetCommand(this));
 

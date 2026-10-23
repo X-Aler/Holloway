@@ -18,18 +18,17 @@ namespace Assets.Game.Scripts.Core.CommandCore.BasicCommands
 
         public override void Start()
         {
-            npc.MovementController.OnArrived += Complete;
-
+            npc.MovementController.MoveTo(movePosition);
         }
 
         public override void Update()
         {
-            npc.MovementController.MoveTo(movePosition);
+            if (npc.MovementController.HasReachedDestination()) Complete();
         }
 
         protected override void OnComplete()
         {
-            npc.MovementController.OnArrived -= Complete;
+            npc.MovementController.Stop();
         } 
     }
 }
