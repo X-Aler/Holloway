@@ -6,11 +6,12 @@ using Assets.Game.Scripts.Systems.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 using VContainer;
 
 namespace Assets.Game.Scripts.Gameplay.NPC
 {
-    [RequireComponent(typeof(NPCMovementController))]
+    [RequireComponent(typeof(NPCMovementController), typeof(NavMeshAgent))]
     public class NPC : MonoBehaviour
     {
         [SerializeField] private NPCData data;
@@ -23,14 +24,17 @@ namespace Assets.Game.Scripts.Gameplay.NPC
         public CommandsRunner CommandsRunner { get; private set; }
         public AliveState AliveState { get; private set;  }
         public DeadState DeadState { get; private set;  }
+        public NavMeshAgent Agent { get; private set; }
 
         private bool initialized = false;
 
         public void Initialize(PointStorage pointStorage, GameTimeManager manager)
         {
+            Agent = GetComponent<NavMeshAgent>();
+
             MovementController = GetComponent<NPCMovementController>();
 
-            MovementController.Initialize();
+            MovementController.Initialize(Agent);
 
             PointStorage = pointStorage;
 

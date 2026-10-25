@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace Assets.Game.Scripts.Models
 {
@@ -8,36 +9,33 @@ namespace Assets.Game.Scripts.Models
         Enter,
         Pickup,
         FittingRoom,
-        Player
     }
 
     public class PointStorage : MonoBehaviour
     {
-        [SerializeField] private Transform npcSpawnPoint;
-        [SerializeField] private Transform enterPoint;
-        [SerializeField] private Transform pickupPoint;
-        [SerializeField] private Transform playerPoint;
-        [SerializeField] private Transform[] fittingRoomPoints;
+        [SerializeField] private Point npcSpawnPoint;
+        [SerializeField] private Point enterPoint;
+        [SerializeField] private Point[] pickupPoint;
+        [SerializeField] private Point[] fittingRoomPoints;
 
-        public Transform GetPoint(PointType type)
+        public Point GetPoint(PointType type)
         {
             return type switch
             {
                 PointType.NpcSpawn => npcSpawnPoint,
                 PointType.Enter => enterPoint,
-                PointType.Pickup => pickupPoint,
-                PointType.Player => playerPoint,
-                PointType.FittingRoom => GetRandomFittingRoom(),
+                PointType.Pickup => GetPoint(pickupPoint),
+                PointType.FittingRoom => GetPoint(fittingRoomPoints),
                 _ => null
             };
         }
 
-        private Transform GetRandomFittingRoom()
+        private Point GetPoint(Point[] points)
         {
-            if (fittingRoomPoints == null || fittingRoomPoints.Length == 0)
+            if (points == null || points.Length == 0)
                 return null;
 
-            return fittingRoomPoints[Random.Range(0, fittingRoomPoints.Length)];
+            return points.FirstOrDefault(p => p.IsOccupied == false);
         }
     }
 }

@@ -7,5 +7,5 @@ using UnityEngine;
 public class MovementCommandData : CommandData
 {
     public PointType point;
-    public override ICommand GetCommand(NPC npc) => new MovementCommand(npc, npc.PointStorage.GetPoint(point).position);
+    public override ICommand GetCommand(NPC npc) => new MovementCommand(npc, npc.PointStorage.GetPoint(point).PointPosition);
 }

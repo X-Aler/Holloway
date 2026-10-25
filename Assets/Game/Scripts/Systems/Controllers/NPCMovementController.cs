@@ -6,7 +6,6 @@ using UnityEngine.AI;
 
 namespace Assets.Game.Scripts.Systems.Controllers
 {
-    [RequireComponent(typeof(NavMeshAgent))]
     public class NPCMovementController : MonoBehaviour
     {
         public event Action OnRotated;
@@ -15,9 +14,9 @@ namespace Assets.Game.Scripts.Systems.Controllers
         private NavMeshAgent agent;
         private bool IsAgent => (agent != null && agent.isOnNavMesh);
 
-        public void Initialize()
+        public void Initialize(NavMeshAgent agent)
         {
-            agent = GetComponent<NavMeshAgent>();
+            this.agent = agent;
         }
 
         public void MoveTo(Vector3 point)
@@ -46,7 +45,7 @@ namespace Assets.Game.Scripts.Systems.Controllers
 
             if (agent.remainingDistance <= agent.stoppingDistance)
             {
-                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0)
+                if (!agent.hasPath)
                 {
                     return true;
                 }
