@@ -70,6 +70,8 @@ public class NPCSpawner : MonoBehaviour
 
         npcObj.Agent.avoidancePriority = npcList.Count;
 
+        npcObj.MoodController.ChangeMood(Random.Range(0f, 1f));
+
         npcList.Add(npcObj);
     }
 

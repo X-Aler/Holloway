@@ -3,10 +3,12 @@ using Assets.Game.Scripts.Core.FSM;
 using Assets.Game.Scripts.Core.FSM.States;
 using Assets.Game.Scripts.Models;
 using Assets.Game.Scripts.Systems.Controllers;
+using Assets.Game.Scripts.UI;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 using VContainer;
 
 namespace Assets.Game.Scripts.Gameplay.NPC
@@ -16,8 +18,11 @@ namespace Assets.Game.Scripts.Gameplay.NPC
     {
         [SerializeField] private NPCData data;
         [SerializeField] private Transform handPosition;
+        [SerializeField] private Slider moodSlider;
         private StateMachine stateMachine;
         public Transform HandPosition => handPosition;
+        public Slider MoodSlider => moodSlider;
+        public NPCData Data => data;
         public NPCMovementController MovementController { get; private set; }
         public PointStorage PointStorage { get; private set; }
         public GameTimeManager GameTimeManager { get; private set; }
@@ -25,6 +30,8 @@ namespace Assets.Game.Scripts.Gameplay.NPC
         public AliveState AliveState { get; private set;  }
         public DeadState DeadState { get; private set;  }
         public NavMeshAgent Agent { get; private set; }
+        public MoodController MoodController { get; private set; }
+        private MoodPresenter moodPresenter;
 
         private bool initialized = false;
 
@@ -51,6 +58,12 @@ namespace Assets.Game.Scripts.Gameplay.NPC
 
             stateMachine.Initialize(AliveState);
 
+            MoodController = new MoodController(this, data.MoodData);
+
+            var moodUI = new MoodUI(moodSlider);
+
+            moodPresenter = new MoodPresenter(MoodController, moodUI);
+
             initialized = true;
         }
 
@@ -59,6 +72,11 @@ namespace Assets.Game.Scripts.Gameplay.NPC
             if (!initialized) return;
 
             stateMachine.CurrentState.Update();
+        }
+
+        private void OnDestroy()
+        {
+            moodPresenter.Dispose();
         }
     }
 }

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: NPCData
   m_EditorClassIdentifier: Assembly-CSharp::Assets.Game.Scripts.Gameplay.NPC.NPCData
   PhonePrefab: {fileID: 3123101197486368324, guid: dbd8134aa27923e46837b79e0bc7975e, type: 3}
+  moodData: {fileID: 11400000, guid: ff80780a505049e40b4e3762bb86824e, type: 2}
   commmandsPool:
   - {fileID: 11400000, guid: ff18235399fbdd049a8d2d35fedadce7, type: 2}
   - {fileID: 11400000, guid: 36be1d3015db5014ea8913149c9d96d0, type: 2}

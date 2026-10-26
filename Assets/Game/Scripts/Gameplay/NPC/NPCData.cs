@@ -10,8 +10,10 @@ namespace Assets.Game.Scripts.Gameplay.NPC
     {
         public GameObject PhonePrefab;
 
+        [SerializeField] private MoodData moodData;
         [SerializeField] private List<CommandData> commmandsPool;
 
         public IReadOnlyList<CommandData> CommandsPool => commmandsPool;
+        public MoodData MoodData => moodData;
     }
 }
