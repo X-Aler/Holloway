@@ -1,4 +1,4 @@
-public enum CommandType
+public enum MoodType
 {
     Good,
     Neutral,

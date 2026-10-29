@@ -3,6 +3,6 @@ using UnityEngine;
 
 public abstract class CommandData : ScriptableObject
 {
-    public CommandType CommandType;
+    public MoodType CommandType;
     public abstract ICommand GetCommand(NPC npc);
 }

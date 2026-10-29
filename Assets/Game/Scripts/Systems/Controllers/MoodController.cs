@@ -8,15 +8,15 @@ namespace Assets.Game.Scripts.Systems.Controllers
 {
     public class MoodController
     {
-        public event Action<float> OnMoodChanged;
+        public event Action<float, Sprite> OnMoodChanged;
         public float CurrentMoodValue => currentMoodValue;
-        public CommandType CurrentMood => currentMood;
+        public MoodType CurrentMood => currentMood;
 
         private NPC npc;
 
         private float currentMoodValue;
 
-        private CommandType currentMood;
+        private MoodType currentMood;
 
         private MoodData moodData;
 
@@ -28,23 +28,25 @@ namespace Assets.Game.Scripts.Systems.Controllers
 
         public void ChangeMood(float value)
         {
-            currentMoodValue += Math.Clamp(value, 0, 1);
+            currentMoodValue += value;
 
-            OnMoodChanged?.Invoke(currentMoodValue);
+            currentMoodValue = Math.Clamp(currentMoodValue, 0f, 1f);
 
             currentMood = GetMood();
+
+            OnMoodChanged?.Invoke(currentMoodValue, moodData.GetSmile(currentMood));
         }
 
-        private CommandType GetMood()
+        private MoodType GetMood()
         {
-            CommandType mood;
+            MoodType mood;
 
             if (currentMoodValue >= moodData.GoodMoodValue)
-                mood = CommandType.Good;
+                mood = MoodType.Good;
             else if (currentMoodValue >= moodData.NeutralMoodValue)
-                mood = CommandType.Neutral;
+                mood = MoodType.Neutral;
             else
-                mood = CommandType.Bad;
+                mood = MoodType.Bad;
 
             return mood;
         }

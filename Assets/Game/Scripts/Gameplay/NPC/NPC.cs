@@ -19,6 +19,7 @@ namespace Assets.Game.Scripts.Gameplay.NPC
         [SerializeField] private NPCData data;
         [SerializeField] private Transform handPosition;
         [SerializeField] private Slider moodSlider;
+        [SerializeField] private Image smileImage;
         private StateMachine stateMachine;
         public Transform HandPosition => handPosition;
         public Slider MoodSlider => moodSlider;
@@ -60,7 +61,7 @@ namespace Assets.Game.Scripts.Gameplay.NPC
 
             MoodController = new MoodController(this, data.MoodData);
 
-            var moodUI = new MoodUI(moodSlider);
+            var moodUI = new MoodUI(moodSlider, smileImage);
 
             moodPresenter = new MoodPresenter(MoodController, moodUI);
 

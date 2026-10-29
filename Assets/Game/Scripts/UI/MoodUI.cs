@@ -10,14 +10,18 @@ namespace Assets.Game.Scripts.UI
     public class MoodUI
     {
         private Slider moodSlider;
-        public MoodUI(Slider slider)
+        private Image smileImage;
+        public MoodUI(Slider slider, Image image)
         {
             moodSlider = slider;
+            smileImage = image;
         }
 
-        public void UpdateUI(float value)
+        public void UpdateUI(float value, Sprite smile)
         {
             moodSlider.value = value;
+
+            smileImage.sprite = smile;
         }
     }
 }
